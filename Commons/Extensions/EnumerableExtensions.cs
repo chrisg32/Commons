@@ -7,7 +7,7 @@ namespace Commons.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static bool CollectionsEqual<T>(this IEnumerable<T> collectionA, IEnumerable<T> collectionB)
+        public static bool IsCollectionsEqual<T>(this ICollection<T> collectionA, ICollection<T> collectionB)
         {
             return !collectionA.Except(collectionB).Any() && !collectionB.Except(collectionA).Any();
         }
