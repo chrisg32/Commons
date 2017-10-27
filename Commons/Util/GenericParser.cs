@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using CG.Commons.Internal;
 
 namespace CG.Commons.Util
 {
@@ -39,12 +41,18 @@ namespace CG.Commons.Util
             { typeof(DateTimeOffset), s => DateTimeOffset.Parse(s) },
             { typeof(TimeSpan), s => TimeSpan.Parse(s) },
             { typeof(Guid), s => Guid.Parse(s) },
-            { typeof(DateTime?), s => string.IsNullOrEmpty(s) ? null : (DateTime?) DateTime.Parse(s) },
-            { typeof(DateTimeOffset?), s => string.IsNullOrEmpty(s) ? null : (DateTimeOffset?) DateTimeOffset.Parse(s) },
-            { typeof(TimeSpan?), s => string.IsNullOrEmpty(s) ? null : (TimeSpan?) TimeSpan.Parse(s) },
+            { typeof(DateTime?), s => string.IsNullOrEmpty(s) ? null : (DateTime?) DateTime.Parse(s, CultureInfo.InvariantCulture) },
+            { typeof(DateTimeOffset?), s => string.IsNullOrEmpty(s) ? null : (DateTimeOffset?) DateTimeOffset.Parse(s, CultureInfo.InvariantCulture) },
+            { typeof(TimeSpan?), s => string.IsNullOrEmpty(s) ? null : (TimeSpan?) TimeSpan.Parse(s, CultureInfo.InvariantCulture) },
             { typeof(Guid?), s => string.IsNullOrEmpty(s) ? null : (Guid?) Guid.Parse(s) },
         };
 
+        /// <summary>
+        /// Note: DateTime and DateTimeOffset values used Invarient Culture to parse and as such are only percise to the second.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stringValue"></param>
+        /// <returns></returns>
         public static T Parse<T>(string stringValue)
         {
             var type = typeof(T);
