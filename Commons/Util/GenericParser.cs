@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Commons.Util
+namespace CG.Commons.Util
 {
     public static class GenericParser
     {

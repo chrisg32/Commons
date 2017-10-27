@@ -1,8 +1,8 @@
 ﻿using System;
-using Commons.Util;
+using CG.Commons.Util;
 using Xunit;
 
-namespace CommonsTest.Util
+namespace CG.Commons.Test.Util
 {
     public class NaturalComparerTest
     {

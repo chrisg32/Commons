@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Commons.Util;
+﻿using CG.Commons.Util;
 
-namespace Commons.Extensions
+namespace CG.Commons.Extensions
 {
     public static class StringExtensions
     {

@@ -9,7 +9,7 @@
     <ProjectGuid>{D35D7F81-3C98-41D0-9BDF-E2C530BF9B1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CommonsTest</RootNamespace>
+    <RootNamespace>CG.Commons.Test</RootNamespace>
     <AssemblyName>CommonsTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

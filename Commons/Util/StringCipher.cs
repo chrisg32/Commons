@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Commons.Util
+namespace CG.Commons.Util
 {
     public static class StringCipher
     {

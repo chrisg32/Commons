@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Commons.Extensions
+namespace CG.Commons.Extensions
 {
     public static class DateTimeExtensions
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Commons.Extensions
+namespace CG.Commons.Extensions
 {
     public static class EnumerableExtensions
     {
