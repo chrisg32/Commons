@@ -42,9 +42,9 @@ namespace CG.Commons.Test.Util
             yield return new object[] { "1", 1L };
             yield return new object[] { "2", 2L };
             yield return new object[] { "9223372036854775807", 9223372036854775807L };
-            yield return new object[] { "0", 0 };
-            yield return new object[] { "-1", -1 };
-            yield return new object[] { "-2", -2 };
+            yield return new object[] { "0", 0L };
+            yield return new object[] { "-1", -1L };
+            yield return new object[] { "-2", -2L };
             yield return new object[] { "-9223372036854775808", -9223372036854775808L };
         }
 
@@ -84,7 +84,7 @@ namespace CG.Commons.Test.Util
         public static IEnumerable<object[]> CreateShortCases()
         {
             yield return new object[] { "1", (short)1 };
-            yield return new object[] { "", (short)2 };
+            yield return new object[] { "2", (short)2 };
             yield return new object[] { "32767", (short)32767 };
             yield return new object[] { "0", (short)0 };
             yield return new object[] { "-1", (short)-1 };
@@ -124,7 +124,7 @@ namespace CG.Commons.Test.Util
             yield return new object[] { "1", 1UL };
             yield return new object[] { "2", 2UL };
             yield return new object[] { "18446744073709551615", 18446744073709551615UL };
-            yield return new object[] { "0", 0 };
+            yield return new object[] { "0", 0UL };
         }
 
         public static IEnumerable<object[]> CreateUnsignedShortCases()
@@ -132,7 +132,7 @@ namespace CG.Commons.Test.Util
             yield return new object[] { "1", (ushort)1U };
             yield return new object[] { "2", (ushort)2U };
             yield return new object[] { "65535", (ushort)65535U };
-            yield return new object[] { "0", (ushort)0 };
+            yield return new object[] { "0", (ushort)0U };
         }
 
         public static IEnumerable<object[]> CreateCharacterCases()
@@ -146,7 +146,7 @@ namespace CG.Commons.Test.Util
         public static IEnumerable<object[]> CreateDateTimeCases()
         {
             yield return new object[] { DateTime.MinValue.ToString(CultureInfo.InvariantCulture), DateTime.MinValue };
-            yield return new object[] { DateTime.MaxValue.ToString(CultureInfo.InvariantCulture), DateTime.MaxValue };
+            yield return new object[] { DateTime.MaxValue.ToString(CultureInfo.InvariantCulture), DateTime.MaxValue.TruncateMilliseconds() };
             var now = DateTime.UtcNow;
             yield return new object[] { now.ToString(CultureInfo.InvariantCulture), now.TruncateMilliseconds() };
         }
@@ -154,7 +154,7 @@ namespace CG.Commons.Test.Util
         public static IEnumerable<object[]> CreateDateTimeOffsetCases()
         {
             yield return new object[] { DateTimeOffset.MinValue.ToString(CultureInfo.InvariantCulture), DateTimeOffset.MinValue };
-            yield return new object[] { DateTimeOffset.MaxValue.ToString(CultureInfo.InvariantCulture), DateTimeOffset.MaxValue };
+            yield return new object[] { DateTimeOffset.MaxValue.ToString(CultureInfo.InvariantCulture), DateTimeOffset.MaxValue.TruncateMilliseconds() };
             var now = DateTimeOffset.UtcNow;
             yield return new object[] { now.ToString(CultureInfo.InvariantCulture), now.TruncateMilliseconds() };
         }
@@ -397,7 +397,8 @@ namespace CG.Commons.Test.Util
 
         [Theory]
         [MemberData(nameof(CreateCharacterCases))]
-        [MemberData(nameof(CreateNullableCases))]
+        [InlineData(null, null)]
+        [InlineData("", null)]
         public void TestParse_Nullablechar(string stringValue, char? expectedValue)
         {
             TestParse(stringValue, expectedValue);

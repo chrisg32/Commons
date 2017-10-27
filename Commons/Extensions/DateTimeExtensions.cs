@@ -68,7 +68,7 @@ namespace CG.Commons.Extensions
 
         public static DateTime TruncateMilliseconds(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0, dateTime.Kind);
         }
 
         #endregion DateTime
