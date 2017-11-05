@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CG.Commons.Extensions
 {
@@ -9,6 +10,22 @@ namespace CG.Commons.Extensions
             for (var i = 0; i < count; i++)
             {
                 action();
+            }
+        }
+
+        public static void Times(this int count, Action<int> action)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                action(i);
+            }
+        }
+
+        public static IEnumerable<int> Iterations(this int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return i;
             }
         }
 
