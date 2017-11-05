@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Commons.Extensions
+namespace CG.Commons.Extensions
 {
     public static class DateTimeExtensions
     {
@@ -66,6 +66,11 @@ namespace Commons.Extensions
             return new DateTime(dateTime.Ticks, DateTimeKind.Unspecified);
         }
 
+        public static DateTime TruncateMilliseconds(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0, dateTime.Kind);
+        }
+
         #endregion DateTime
 
         #region Nullable<DateTime>
@@ -91,5 +96,14 @@ namespace Commons.Extensions
         }
 
         #endregion Nullable<DateTime>
+
+        #region DateTimeOffset
+
+        public static DateTimeOffset TruncateMilliseconds(this DateTimeOffset dateTimeOffset)
+        {
+            return new DateTimeOffset(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, 0, dateTimeOffset.Offset);
+        }
+
+        #endregion
     }
 }

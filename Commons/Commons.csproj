@@ -1,7 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>CG.Commons</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A collection of useful C# utilities, extensions, and data structures.</Description>
+    <Authors>Chris Gonzales</Authors>
+    <Version>1.0.0-beta</Version>
+    <PackageTags>Commons C# DataStructures Dictionary Extensions</PackageTags>
+    <Copyright>Copyright 2017 Chris Gonzales</Copyright>
+    <PackageIconUrl>https://chrisg32.github.io/assets/cg_logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/chrisg32/Commons</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/chrisg32/Commons/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageId>CG.Commons</PackageId>
+    <Company>Chris Gonzales</Company>
+    <Product>CG Commons Library</Product>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/chrisg32/Commons</RepositoryUrl>
+    <PackageReleaseNotes>First releasee.</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
+  </ItemGroup>
 
 </Project>

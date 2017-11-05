@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Commons.Collections
+namespace CG.Commons.Collections
 {
     public class CompositeKeyMap<TKey, TValue> : BaseCompositeKeyMap<TKey, TValue>
     {

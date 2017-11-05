@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Commons.Extensions;
+using CG.Commons.Extensions;
 using Xunit;
 
-namespace CommonsTest.Extensions
+namespace CG.Commons.Test.Extensions
 {
     public class EnumerableExtensionsTest
     {
