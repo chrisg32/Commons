@@ -9,7 +9,7 @@ namespace Commons.Extensions
     {
         public static bool IsCollectionsEqual<T>(this ICollection<T> collectionA, ICollection<T> collectionB)
         {
-            return !collectionA.Except(collectionB).Any() && !collectionB.Except(collectionA).Any();
+            return collectionA.Count == collectionB.Count && !collectionA.Except(collectionB).Any() && !collectionB.Except(collectionA).Any();
         }
 
         /// <summary>
