@@ -74,6 +74,26 @@ namespace CG.Commons.Util
             return true;
         }
 
+        public static object Parse(string stringValue, Type type)
+        {
+            if (!Parsers.ContainsKey(type)) throw new ArgumentException($"No parser have been registered for type: {type}");
+            return Parsers[type].Invoke(stringValue);
+        }
+
+        public static bool TryParse(string stringValue, out object value, Type type)
+        {
+            try
+            {
+                value = Parse(stringValue, type);
+            }
+            catch
+            {
+                value = default(object);
+                return false;
+            }
+            return true;
+        }
+
         public static void RegisterParser(Type type, Func<string, object> parseFunc)
         {
             Parsers[type] = parseFunc;
