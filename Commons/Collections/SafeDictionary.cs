@@ -11,7 +11,7 @@ namespace CG.Commons.Collections
     /// <typeparam name="TValue"></typeparam>
     public class SafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private readonly Dictionary<TKey, TValue> _data = new Dictionary<TKey, TValue>();
+        private readonly Dictionary<TKey, TValue> _data;
 
         public TValue DefaultValue { get; }
 
@@ -19,6 +19,15 @@ namespace CG.Commons.Collections
         public SafeDictionary(TValue defaultValue = default(TValue))
         {
             DefaultValue = defaultValue;
+            _data = new Dictionary<TKey, TValue>();
+        }
+
+        /// <param name="dictionary"></param>
+        /// <param name="defaultValue">The default value that will be returned when a key is not found.</param>
+        public SafeDictionary(Dictionary<TKey, TValue> dictionary, TValue defaultValue = default(TValue))
+        {
+            DefaultValue = defaultValue;
+            _data = dictionary;
         }
 
         public TValue this[TKey key]
