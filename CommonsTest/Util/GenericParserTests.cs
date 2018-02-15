@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CG.Commons.Test.Util
 {
-    public class GenericParserTest
+    public class GenericParserTests
     {
         [Fact]
         public void TestCanary()
@@ -189,13 +189,37 @@ namespace CG.Commons.Test.Util
 
         #region Test Methods
 
-        [Theory]
-        [InlineData("", "")]
-        [InlineData("test", "test")]
-        [InlineData(null, null)]
-        public void TestParse_object(string stringValue, object expectedValue)
+        private class MockClass { }
+
+        [Fact]
+        public void TestParse_Unknown()
         {
-            TestParse(stringValue, expectedValue);
+            Assert.Throws<ArgumentException>(() => { GenericParser.Parse<MockClass>("foo"); });
+            Assert.Throws<ArgumentException>(() => { GenericParser.Parse("foo", typeof(MockClass)); });
+        }
+
+        [Fact]
+        public void Test_TryParseFail()
+        {
+            var res1 = GenericParser.TryParse("foo", out int _);
+            Assert.False(res1);
+
+            var res2 = GenericParser.TryParse("bar", out object _, typeof(int));
+            Assert.False(res2);
+        }
+
+        [Fact]
+        public void Test_RegisterParser()
+        {
+            GenericParser.RegisterParser(typeof(object), s => s);
+
+            var res1 = GenericParser.TryParse("foo", out object o1);
+            Assert.True(res1);
+            Assert.Equal("foo", o1.ToString());
+
+            var res2 = GenericParser.TryParse("bar", out object o2, typeof(object));
+            Assert.True(res2);
+            Assert.Equal("bar", o2.ToString());
         }
 
         [Theory]
@@ -472,8 +496,25 @@ namespace CG.Commons.Test.Util
         [AssertionMethod]
         private static void TestParse<T>(string stringValue, T expectedValue)
         {
-            var result = GenericParser.Parse<T>(stringValue);
-            Assert.Equal(expectedValue, result);
+            var result1 = GenericParser.Parse<T>(stringValue);
+            Assert.Equal(expectedValue, result1);
+
+            var result2 = GenericParser.Parse(stringValue, typeof(T));
+            Assert.Equal(expectedValue, result2);
+
+            var result3 = GenericParser.TryParse(stringValue, out T out1);
+            Assert.True(result3);
+            Assert.Equal(expectedValue, out1);
+
+            var result4 = GenericParser.TryParse(stringValue, out object out2, typeof(T));
+            Assert.True(result4);
+            Assert.Equal(expectedValue, out2);
+
+            var result5 = stringValue.Parse<T>();
+            Assert.Equal(expectedValue, result5);
+
+            var result6 = stringValue.Parse(typeof(T));
+            Assert.Equal(expectedValue, result6);
         }
 
         

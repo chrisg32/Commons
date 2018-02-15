@@ -9,7 +9,6 @@ namespace CG.Commons.Util
     {
         private static readonly Dictionary<Type, Func<string, object>> Parsers = new Dictionary<Type, Func<string, object>>
         {
-            { typeof(object), s => s },
             { typeof(string), s => s },
             { typeof(bool), s => bool.Parse(s) },
             { typeof(int), s => int.Parse(s) },

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace CG.Commons.Test.Extensions
 {
-    public class EnumerableExtensionsTest
+    public class EnumerableExtensionsTests
     {
         [Fact]
         public void TestCanary()

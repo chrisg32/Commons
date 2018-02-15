@@ -4,7 +4,7 @@ using Xunit;
 
 namespace CG.Commons.Test.Util
 {
-    public class NaturalComparerTest
+    public class NaturalComparerTests
     {
         [Fact]
         public void TestCanary()
@@ -20,6 +20,9 @@ namespace CG.Commons.Test.Util
         }
 
         [Theory]
+        //variable length
+        [InlineData("a", "aa", ComparerEquality.LessThan)]
+        [InlineData("aa", "a", ComparerEquality.GreaterThan)]
         //character & character
         [InlineData("a", "b", ComparerEquality.LessThan)]
         [InlineData("b", "a", ComparerEquality.GreaterThan)]

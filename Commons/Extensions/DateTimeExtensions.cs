@@ -8,14 +8,14 @@ namespace CG.Commons.Extensions
         #region DateTime
 
         /// <summary>
-        /// Output a string representation of a DateTime object that can be used in a SQL where clause. Does not include time.
+        /// Output a string representation of a DateTime object that can be used in a SQL where clause. Does not include timeby default.
         /// </summary>
         /// <param name="date"></param>
+        /// <param name="format"></param>
         /// <returns></returns>
-        public static string ToSqlFormatString(this DateTime date)
+        public static string ToSqlFormatString(this DateTime date, string format = "MM/dd/yyyy")
         {
-            //TODO add time
-            return string.Format("to_date('{0:MM/dd/yyyy}','MM/dd/yyyy')", date);
+            return $"to_date('{date.ToString(format)}','{format}')";
         }
 
         public static DateTime ToTimeZone(this DateTime utcTime, TimeZoneInfo timezone)

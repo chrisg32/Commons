@@ -4,7 +4,7 @@ using Xunit;
 
 namespace CG.Commons.Test.Collections
 {
-    public class SafeDictionaryTest
+    public class SafeDictionaryTests
     {
         [Fact]
         public void TestCanary()
