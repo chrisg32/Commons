@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -106,6 +107,20 @@ namespace CG.Commons.Extensions
             }
             if (parentheses) sb.Append(")");
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the <see cref="ObservableCollection{T}"/>
+        /// </summary>
+        /// <typeparam name="TValue">The type of the collection.</typeparam>
+        /// <param name="collection">The collection.</param>
+        /// <param name="items">The elements to add to the collection.</param>
+        public static void AddRange<TValue>(this ObservableCollection<TValue> collection, IEnumerable<TValue> items)
+        {
+            foreach (var item in items)
+            {
+                collection.Add(item);
+            }
         }
     }
 }
