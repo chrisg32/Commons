@@ -18,10 +18,11 @@
     <RepositoryType>Git</RepositoryType>
     <RepositoryUrl>https://github.com/chrisg32/Commons</RepositoryUrl>
     <PackageReleaseNotes>First release.</PackageReleaseNotes>
+    <AssemblyName>CG.Commons</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
   </ItemGroup>
 
 </Project>
