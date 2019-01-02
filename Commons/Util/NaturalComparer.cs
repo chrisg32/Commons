@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using CG.Commons.Extensions;
 
 namespace CG.Commons.Util
 {
@@ -9,19 +9,13 @@ namespace CG.Commons.Util
     {
         private readonly bool _ignoreCase;
         private readonly bool _ignoreWhitespace;
-
-        [Flags]
-        public enum NaturalComparerOptions
-        {
-            None,
-            IgnoreCase,
-            IgnoreWhiteSpace
-        }
+        private readonly bool _checkTrailingDecimalLength;
 
         public NaturalComparer(NaturalComparerOptions options = NaturalComparerOptions.None)
         {
             _ignoreCase = options.HasFlag(NaturalComparerOptions.IgnoreCase);
             _ignoreWhitespace = options.HasFlag(NaturalComparerOptions.IgnoreWhiteSpace);
+            _checkTrailingDecimalLength = options.HasFlag(NaturalComparerOptions.CheckTrailingDecimalLength);
         }
 
         //less than zero = x is less than y
@@ -83,11 +77,15 @@ namespace CG.Commons.Util
                 //if both characters are numeric then we have to compare the full numeric string part
                 if (xIsNum && yIsNum)
                 {
-                    var xints = GetNumericString(xarray, ref xindex);
-                    var yints = GetNumericString(yarray, ref yindex);
-                    var xint = int.Parse(xints);
-                    var yint = int.Parse(yints);
-                    var iresult = xint.CompareTo(yint);
+                    var xnums = GetNumericString(xarray, ref xindex);
+                    var ynums = GetNumericString(yarray, ref yindex);
+                    var xnum = decimal.Parse(xnums);
+                    var ynum = decimal.Parse(ynums);
+                    var iresult = xnum.CompareTo(ynum);
+                    if (_checkTrailingDecimalLength && iresult == 0 && xnums.Length != ynums.Length)
+                    {
+                        return xnums.Length.CompareTo(ynums.Length);
+                    }
                     if (iresult != 0) return iresult;
                     continue;
                 }
@@ -106,7 +104,7 @@ namespace CG.Commons.Util
         private string GetNumericString(IReadOnlyList<char> source, ref int index)
         {
             var sb = new StringBuilder();
-            while (index < source.Count && char.IsDigit(source[index]))
+            while (index < source.Count && (char.IsDigit(source[index]) || source[index] == '.'))
             {
                 sb.Append(source[index]);
                 index++;

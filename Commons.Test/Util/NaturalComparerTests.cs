@@ -6,12 +6,6 @@ namespace CG.Commons.Test.Util
 {
     public class NaturalComparerTests
     {
-        [Fact]
-        public void TestCanary()
-        {
-            Assert.True(true);
-        }
-
         public enum ComparerEquality
         {
             LessThan = -1,
@@ -31,18 +25,31 @@ namespace CG.Commons.Test.Util
         //single number & character
         [InlineData("4", "a", ComparerEquality.LessThan)]
         [InlineData("a", "4", ComparerEquality.GreaterThan)]
-        //single number & single number
+        //single digit & single digit
         [InlineData("4", "6", ComparerEquality.LessThan)]
         [InlineData("7", "6", ComparerEquality.GreaterThan)]
         [InlineData("5", "5", ComparerEquality.Equal)]
-        //double number & single number
+        //double digit & single digit
         [InlineData("4", "16", ComparerEquality.LessThan)]
         [InlineData("17", "6", ComparerEquality.GreaterThan)]
         [InlineData("5", "05", ComparerEquality.Equal)]
-        //double number & double number
+        //double digit & double digit
         [InlineData("14", "16", ComparerEquality.LessThan)]
         [InlineData("17", "16", ComparerEquality.GreaterThan)]
         [InlineData("15", "15", ComparerEquality.Equal)]
+        //decimal & decimal
+        [InlineData("1.4", "1.6", ComparerEquality.LessThan)]
+        [InlineData("1.7", "1.6", ComparerEquality.GreaterThan)]
+        [InlineData("1.5", "1.5", ComparerEquality.Equal)]
+        //decimal & trailing decimal
+        [InlineData("1.4", "1.60", ComparerEquality.LessThan)]
+        [InlineData("1.7", "1.60", ComparerEquality.GreaterThan)]
+        [InlineData("1.5", "1.50", ComparerEquality.Equal)]
+        //sandwiched decimal and decimal length
+        [InlineData("1.5", "1.5000", ComparerEquality.Equal)]
+        [InlineData("1.5", "1.5000", ComparerEquality.LessThan, NaturalComparerOptions.CheckTrailingDecimalLength)]
+        [InlineData("a1.5b", "a1.5000b", ComparerEquality.LessThan, NaturalComparerOptions.CheckTrailingDecimalLength)]
+        [InlineData("a1.5b", "a1.5000b", ComparerEquality.Equal)]
         //ignore leading and trailing whitespace
         [InlineData("aa", "a a", ComparerEquality.GreaterThan)]
         [InlineData("aa", " aa", ComparerEquality.Equal)]
@@ -55,32 +62,19 @@ namespace CG.Commons.Test.Util
         [InlineData("12a 17b", "12a 19a", ComparerEquality.LessThan)]
         [InlineData("12a 17b", "12a 17a", ComparerEquality.GreaterThan)]
         [InlineData("12a 17a", "12a 17a", ComparerEquality.Equal)]
-        public void TestCompare(string left, string right, ComparerEquality expectedResult)
+        //ignore case
+        [InlineData("a", "a", ComparerEquality.Equal, NaturalComparerOptions.IgnoreCase)]
+        [InlineData("a", "A", ComparerEquality.Equal, NaturalComparerOptions.IgnoreCase)]
+        //ignore whitespace
+        [InlineData("a a", "a   a", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        [InlineData("a a", "aa", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        [InlineData("aa", "a a", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        [InlineData("aa", " aa", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        [InlineData("aa ", " aa", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        [InlineData("aa", " a\ta", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        public void TestCompare(string left, string right, ComparerEquality expectedResult, NaturalComparerOptions options = NaturalComparerOptions.None)
         {
-            var comparer = new NaturalComparer();
-            DoTest(left, right, expectedResult, comparer);
-        }
-
-        [Theory]
-        [InlineData("a", "a", ComparerEquality.Equal)]
-        [InlineData("a", "A", ComparerEquality.Equal)]
-        public void TestCompareIgnoreCase(string left, string right, ComparerEquality expectedResult)
-        {
-            var comparer = new NaturalComparer(NaturalComparer.NaturalComparerOptions.IgnoreCase);
-            DoTest(left, right, expectedResult, comparer);
-        }
-
-
-        [Theory]
-        [InlineData("a a", "a   a", ComparerEquality.Equal)]
-        [InlineData("a a", "aa", ComparerEquality.Equal)]
-        [InlineData("aa", "a a", ComparerEquality.Equal)]
-        [InlineData("aa", " aa", ComparerEquality.Equal)]
-        [InlineData("aa ", " aa", ComparerEquality.Equal)]
-        [InlineData("aa", " a\ta", ComparerEquality.Equal)]
-        public void TestCompareIgnoreWhitespace(string left, string right, ComparerEquality expectedResult)
-        {
-            var comparer = new NaturalComparer(NaturalComparer.NaturalComparerOptions.IgnoreWhiteSpace);
+            var comparer = new NaturalComparer(options);
             DoTest(left, right, expectedResult, comparer);
         }
 

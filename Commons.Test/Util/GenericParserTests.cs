@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using CG.Commons.Extensions;
 using CG.Commons.Util;
-using JetBrains.Annotations;
 using Xunit;
 
 namespace CG.Commons.Test.Util
@@ -493,7 +492,6 @@ namespace CG.Commons.Test.Util
 
         #region Utility Methods
 
-        [AssertionMethod]
         private static void TestParse<T>(string stringValue, T expectedValue)
         {
             var result1 = GenericParser.Parse<T>(stringValue);
