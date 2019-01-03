@@ -8,6 +8,7 @@ namespace CG.Commons.Util
         None,
         IgnoreCase,
         IgnoreWhiteSpace,
-        CheckTrailingDecimalLength
+        CheckTrailingDecimalLength,
+        LowercaseFirst
     }
 }

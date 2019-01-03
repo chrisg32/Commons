@@ -21,7 +21,8 @@ namespace CG.Commons.Test.Util
         [InlineData("a", "b", ComparerEquality.LessThan)]
         [InlineData("b", "a", ComparerEquality.GreaterThan)]
         [InlineData("a", "a", ComparerEquality.Equal)]
-        [InlineData("a", "A", ComparerEquality.GreaterThan)]
+        [InlineData("a", "A", ComparerEquality.GreaterThan, NaturalComparerOptions.LowercaseFirst)]
+        [InlineData("A", "a", ComparerEquality.GreaterThan)]
         //single number & character
         [InlineData("4", "a", ComparerEquality.LessThan)]
         [InlineData("a", "4", ComparerEquality.GreaterThan)]
@@ -72,6 +73,8 @@ namespace CG.Commons.Test.Util
         [InlineData("aa", " aa", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
         [InlineData("aa ", " aa", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
         [InlineData("aa", " a\ta", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
+        //capitalization order
+        [InlineData("added4", "Added11", ComparerEquality.LessThan)]
         public void TestCompare(string left, string right, ComparerEquality expectedResult, NaturalComparerOptions options = NaturalComparerOptions.None)
         {
             var comparer = new NaturalComparer(options);

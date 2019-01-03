@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using CG.Commons.Extensions;
 
 namespace CG.Commons.Util
 {
@@ -10,12 +9,14 @@ namespace CG.Commons.Util
         private readonly bool _ignoreCase;
         private readonly bool _ignoreWhitespace;
         private readonly bool _checkTrailingDecimalLength;
+        private readonly bool _lowercaseFirst;
 
         public NaturalComparer(NaturalComparerOptions options = NaturalComparerOptions.None)
         {
             _ignoreCase = options.HasFlag(NaturalComparerOptions.IgnoreCase);
             _ignoreWhitespace = options.HasFlag(NaturalComparerOptions.IgnoreWhiteSpace);
             _checkTrailingDecimalLength = options.HasFlag(NaturalComparerOptions.CheckTrailingDecimalLength);
+            _lowercaseFirst = options.HasFlag(NaturalComparerOptions.LowercaseFirst);
         }
 
         //less than zero = x is less than y
@@ -27,7 +28,7 @@ namespace CG.Commons.Util
         /// </summary>
         /// <param name="left">The left string to compare.</param>
         /// <param name="right">The right string to compare.</param>
-        /// <returns>If the right string is less than the left the return value will be less than zero.
+        /// <returns>If the left string is less than the right the return value will be less than zero.
         ///  If the left string is greater than the right than a value greater than zero is returned.
         ///  If the left string is equal to the right string zero is returned.</returns>
         public int Compare(string left, string right)
@@ -95,13 +96,35 @@ namespace CG.Commons.Util
                 if (yIsNum) return 1;
 
                 //both characters are not numeric so we simply compare
-                var cresult = xchar.CompareTo(ychar);
+                var cresult = CapitalOrderComparison(xchar, ychar);
                 if (cresult != 0) return cresult;
             }
 
         }
 
-        private string GetNumericString(IReadOnlyList<char> source, ref int index)
+        private int CapitalOrderComparison(char x, char y)
+        {
+            var result = x.CompareTo(y);
+            if (result == 0) return result;
+            if (char.IsLetter(x) && char.IsLetter(y))
+            {
+                result = char.ToLowerInvariant(x).CompareTo(char.ToLowerInvariant(y));
+                if (result != 0) return result;
+                if (_lowercaseFirst)
+                {
+                    if (!char.IsLower(x) && char.IsLower(y)) return -1;
+                    if (char.IsLower(x) && !char.IsLower(y)) return 1;
+                }
+                else
+                {
+                    if (!char.IsLower(x) && char.IsLower(y)) return 1;
+                    if (char.IsLower(x) && !char.IsLower(y)) return -1;
+                }
+            }
+            return result;
+        }
+
+        private static string GetNumericString(IReadOnlyList<char> source, ref int index)
         {
             var sb = new StringBuilder();
             while (index < source.Count && (char.IsDigit(source[index]) || source[index] == '.'))
