@@ -75,6 +75,9 @@ namespace CG.Commons.Test.Util
         [InlineData("aa", " a\ta", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
         //capitalization order
         [InlineData("added4", "Added11", ComparerEquality.LessThan)]
+        //double decimals
+        [InlineData("12.4.1", "12.4.1", ComparerEquality.Equal)]
+        [InlineData("12.41", "12.4.1", ComparerEquality.GreaterThan)]
         public void TestCompare(string left, string right, ComparerEquality expectedResult, NaturalComparerOptions options = NaturalComparerOptions.None)
         {
             var comparer = new NaturalComparer(options);

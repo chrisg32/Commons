@@ -127,8 +127,10 @@ namespace CG.Commons.Util
         private static string GetNumericString(IReadOnlyList<char> source, ref int index)
         {
             var sb = new StringBuilder();
-            while (index < source.Count && (char.IsDigit(source[index]) || source[index] == '.'))
+            var point = true;
+            while (index < source.Count && (char.IsDigit(source[index]) || (point && source[index] == '.')))
             {
+                if (source[index] == '.') point = false;
                 sb.Append(source[index]);
                 index++;
             }
