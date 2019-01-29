@@ -10,6 +10,7 @@ namespace CG.Commons.Util
         private readonly bool _ignoreWhitespace;
         private readonly bool _checkTrailingDecimalLength;
         private readonly bool _lowercaseFirst;
+        private readonly bool _decimalPrecision;
 
         public NaturalComparer(NaturalComparerOptions options = NaturalComparerOptions.None)
         {
@@ -17,6 +18,7 @@ namespace CG.Commons.Util
             _ignoreWhitespace = options.HasFlag(NaturalComparerOptions.IgnoreWhiteSpace);
             _checkTrailingDecimalLength = options.HasFlag(NaturalComparerOptions.CheckTrailingDecimalLength);
             _lowercaseFirst = options.HasFlag(NaturalComparerOptions.LowercaseFirst);
+            _decimalPrecision = options.HasFlag(NaturalComparerOptions.DecimalPrecision);
         }
 
         //less than zero = x is less than y
@@ -78,8 +80,8 @@ namespace CG.Commons.Util
                 //if both characters are numeric then we have to compare the full numeric string part
                 if (xIsNum && yIsNum)
                 {
-                    var xnums = GetNumericString(xarray, ref xindex);
-                    var ynums = GetNumericString(yarray, ref yindex);
+                    var xnums = GetNumericString(xarray, ref xindex, _decimalPrecision);
+                    var ynums = GetNumericString(yarray, ref yindex, _decimalPrecision);
                     var xnum = decimal.Parse(xnums);
                     var ynum = decimal.Parse(ynums);
                     var iresult = xnum.CompareTo(ynum);
@@ -124,11 +126,11 @@ namespace CG.Commons.Util
             return result;
         }
 
-        private static string GetNumericString(IReadOnlyList<char> source, ref int index)
+        private static string GetNumericString(IReadOnlyList<char> source, ref int index, bool decimalPrecision)
         {
             var sb = new StringBuilder();
             var point = true;
-            while (index < source.Count && (char.IsDigit(source[index]) || (point && source[index] == '.')))
+            while (index < source.Count && (char.IsDigit(source[index]) || decimalPrecision && point && source[index] == '.'))
             {
                 if (source[index] == '.') point = false;
                 sb.Append(source[index]);

@@ -44,13 +44,18 @@ namespace CG.Commons.Test.Util
         [InlineData("1.5", "1.5", ComparerEquality.Equal)]
         //decimal & trailing decimal
         [InlineData("1.4", "1.60", ComparerEquality.LessThan)]
-        [InlineData("1.7", "1.60", ComparerEquality.GreaterThan)]
-        [InlineData("1.5", "1.50", ComparerEquality.Equal)]
+        [InlineData("1.4", "1.60", ComparerEquality.LessThan, NaturalComparerOptions.DecimalPrecision)]
+        [InlineData("1.7", "1.60", ComparerEquality.GreaterThan, NaturalComparerOptions.DecimalPrecision)]
+        [InlineData("1.7", "1.60", ComparerEquality.LessThan)]
+        [InlineData("1.5", "1.50", ComparerEquality.Equal, NaturalComparerOptions.DecimalPrecision)]
+        [InlineData("1.5", "1.50", ComparerEquality.LessThan)]
         //sandwiched decimal and decimal length
-        [InlineData("1.5", "1.5000", ComparerEquality.Equal)]
+        [InlineData("1.5", "1.5000", ComparerEquality.Equal, NaturalComparerOptions.DecimalPrecision)]
+        [InlineData("1.5", "1.5000", ComparerEquality.LessThan)]
         [InlineData("1.5", "1.5000", ComparerEquality.LessThan, NaturalComparerOptions.CheckTrailingDecimalLength)]
         [InlineData("a1.5b", "a1.5000b", ComparerEquality.LessThan, NaturalComparerOptions.CheckTrailingDecimalLength)]
-        [InlineData("a1.5b", "a1.5000b", ComparerEquality.Equal)]
+        [InlineData("a1.5b", "a1.5000b", ComparerEquality.Equal, NaturalComparerOptions.DecimalPrecision)]
+        [InlineData("a1.5b", "a1.5000b", ComparerEquality.LessThan)]
         //ignore leading and trailing whitespace
         [InlineData("aa", "a a", ComparerEquality.GreaterThan)]
         [InlineData("aa", " aa", ComparerEquality.Equal)]
