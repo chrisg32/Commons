@@ -5,12 +5,7 @@ using System.Linq;
 
 namespace CG.Commons.Collections
 {
-    /// <summary>
-    /// Work in progress
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    public class LazyDictionary<TKey, TValue> : IDictionary<TKey, TValue> //,ISerializable ,IDictionary, ICollection, IReadOnlyDictionary<TKey, TValue>, IReadOnlyCollection<KeyValuePair<TKey, TValue>>, IDeserializationCallback
+    public static class LazyDictionary
     {
         public static LazyDictionary<TKeyType, TValueType> Create<TKeyType, TValueType>() where TValueType : new()
         {
@@ -26,16 +21,42 @@ namespace CG.Commons.Collections
         {
             return new LazyDictionary<TKeyType, TValueType>(initializer);
         }
+    }
+
+    /// <summary>
+    /// Work in progress
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public class LazyDictionary<TKey, TValue> : IDictionary<TKey, TValue> //,ISerializable ,IDictionary, ICollection, IReadOnlyDictionary<TKey, TValue>, IReadOnlyCollection<KeyValuePair<TKey, TValue>>, IDeserializationCallback
+    {
+        [Obsolete("User LazyDictionary.Create (non-generic class) instead.")]
+        public static LazyDictionary<TKeyType, TValueType> Create<TKeyType, TValueType>() where TValueType : new()
+        {
+            return new LazyDictionary<TKeyType, TValueType>(() => new TValueType());
+        }
+
+        [Obsolete("User LazyDictionary.Create (non-generic class) instead.")]
+        public static LazyDictionary<TKeyType, TValueType> Create<TKeyType, TValueType>(Func<TValueType> initializer)
+        {
+            return new LazyDictionary<TKeyType, TValueType>(initializer);
+        }
+
+        [Obsolete("User LazyDictionary.Create (non-generic class) instead.")]
+        public static LazyDictionary<TKeyType, TValueType> Create<TKeyType, TValueType>(Func<TKeyType, TValueType> initializer)
+        {
+            return new LazyDictionary<TKeyType, TValueType>(initializer);
+        }
 
         private readonly Func<TKey, TValue> _initializer;
         private readonly Dictionary<TKey, TValue> _underlyingDictionary = new Dictionary<TKey, TValue>();
 
-        private LazyDictionary(Func<TValue> initializer)
+        internal LazyDictionary(Func<TValue> initializer)
         {
             _initializer = key => initializer();
         }
 
-        private LazyDictionary(Func<TKey, TValue> initializer)
+        internal LazyDictionary(Func<TKey, TValue> initializer)
         {
             _initializer = initializer;
         }

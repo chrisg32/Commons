@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using CG.Commons.Collections;
 
 namespace CG.Commons.Extensions
 {
@@ -121,6 +122,34 @@ namespace CG.Commons.Extensions
             {
                 collection.Add(item);
             }
+        }
+
+        public static void AddRange<TValue>(this ICollection<TValue> collection, IEnumerable<TValue> items)
+        {
+            foreach (var item in items)
+            {
+                collection.Add(item);
+            }
+        }
+
+        public static Collectionary<TKey, TValue> ToCollectionary<TKey, TValue>(this IEnumerable<TValue> collection, Func<TValue, TKey> keySelector, bool makeUnique = false)
+        {
+            var collectionary = new Collectionary<TKey, TValue>(makeUnique);
+            foreach (var item in collection)
+            {
+                collectionary.Add(keySelector(item), item);
+            }
+            return collectionary;
+        }
+
+        public static Collectionary<TKey, TValue> ToCollectionary<TKey, TValue>(this IEnumerable<TValue> collection, Func<TValue, TKey> keySelector, IEqualityComparer<TValue> comparer)
+        {
+            var collectionary = new Collectionary<TKey, TValue>(comparer);
+            foreach (var item in collection)
+            {
+                collectionary.Add(keySelector(item), item);
+            }
+            return collectionary;
         }
     }
 }
