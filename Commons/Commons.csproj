@@ -6,9 +6,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A collection of useful C# utilities, extensions, and data structures.</Description>
     <Authors>Chris Gonzales</Authors>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <PackageTags>Commons C# DataStructures Dictionary Extensions</PackageTags>
-    <Copyright>Copyright 2019 Chris Gonzales</Copyright>
+    <Copyright>Copyright 2020 Chris Gonzales</Copyright>
     <PackageIconUrl>https://chrisg32.github.io/assets/cg_logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/chrisg32/Commons</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/chrisg32/Commons/blob/master/LICENSE</PackageLicenseUrl>
@@ -17,9 +17,7 @@
     <Product>CG Commons Library</Product>
     <RepositoryType>Git</RepositoryType>
     <RepositoryUrl>https://github.com/chrisg32/Commons</RepositoryUrl>
-    <PackageReleaseNotes>Natural comparer handles decimals.
-Removed Jetbrains Nuget dependency.
-Updated packages.</PackageReleaseNotes>
+    <PackageReleaseNotes>Natural comparer implements IComparer (non-generic).</PackageReleaseNotes>
     <AssemblyName>CG.Commons</AssemblyName>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CG.Commons.Util
 {
-    public class NaturalComparer : IComparer<string>
+    public class NaturalComparer : IComparer<string>, IComparer
     {
         private readonly bool _ignoreCase;
         private readonly bool _ignoreWhitespace;
@@ -140,5 +141,9 @@ namespace CG.Commons.Util
             return sb.ToString();
         }
 
+        public int Compare(object x, object y)
+        {
+            return Compare(x?.ToString(), y?.ToString());
+        }
     }
 }
