@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace CG.Commons.Extensions
 {
@@ -18,6 +19,22 @@ namespace CG.Commons.Extensions
             for (var i = 0; i < count; i++)
             {
                 action(i);
+            }
+        }
+
+        public static IEnumerable<TResult> Times<TResult>(this int count, Func<TResult> function)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return function();
+            }
+        }
+
+        public static IEnumerable<TResult> Times<TResult>(this int count, Func<int, TResult> function)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return function(i);
             }
         }
 
