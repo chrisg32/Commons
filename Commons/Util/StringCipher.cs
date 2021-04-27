@@ -21,14 +21,15 @@ namespace CG.Commons.Util
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
             // so that the same Salt and IV values can be used when decrypting.  
             var saltStringBytes = Generate256BitsOfRandomEntropy();
-            var ivStringBytes = Generate256BitsOfRandomEntropy();
+            var ivStringBytes = Generate128BitsOfRandomEntropy();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = Aes.Create())
                 {
-                    symmetricKey.BlockSize = 256;
+                    //https://stackoverflow.com/questions/9300340/got-error-specified-block-size-is-not-valid-for-this-algorithm-while-initiali
+                    symmetricKey.BlockSize = 128;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -91,6 +92,17 @@ namespace CG.Commons.Util
         private static byte[] Generate256BitsOfRandomEntropy()
         {
             var randomBytes = new byte[32]; // 32 Bytes will give us 256 bits.
+            using (var rngCsp = RandomNumberGenerator.Create())
+            {
+                // Fill the array with cryptographically secure random bytes.
+                rngCsp.GetBytes(randomBytes);
+            }
+            return randomBytes;
+        }
+        
+        private static byte[] Generate128BitsOfRandomEntropy()
+        {
+            var randomBytes = new byte[16]; // 16 Bytes will give us 128 bits.
             using (var rngCsp = RandomNumberGenerator.Create())
             {
                 // Fill the array with cryptographically secure random bytes.
