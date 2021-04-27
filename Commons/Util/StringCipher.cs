@@ -11,6 +11,8 @@ namespace CG.Commons.Util
         // This constant is used to determine the keysize of the encryption algorithm in bits.
         // We divide this by 8 within the code below to get the equivalent number of bytes.
         private const int Keysize = 256;
+        
+        private const int BlockSize = 128;
 
         // This constant determines the number of iterations for the password bytes generation function.
         private const int DerivationIterations = 1000;
@@ -29,7 +31,7 @@ namespace CG.Commons.Util
                 using (var symmetricKey = Aes.Create())
                 {
                     //https://stackoverflow.com/questions/9300340/got-error-specified-block-size-is-not-valid-for-this-algorithm-while-initiali
-                    symmetricKey.BlockSize = 128;
+                    symmetricKey.BlockSize = BlockSize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -55,22 +57,26 @@ namespace CG.Commons.Util
         public static string Decrypt(string cipherText, string passPhrase)
         {
             if (cipherText == null) return null;
+
+            var saltLength = Keysize / 8;
+            var ivLength = BlockSize / 8;
+            
             // Get the complete stream of bytes that represent:
             // [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
             var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(cipherText);
             // Get the saltbytes by extracting the first 32 bytes from the supplied cipherText bytes.
-            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(Keysize / 8).ToArray();
-            // Get the IV bytes by extracting the next 32 bytes from the supplied cipherText bytes.
-            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8).Take(Keysize / 8).ToArray();
+            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(saltLength).ToArray();
+            // Get the IV bytes by extracting the next 16 bytes from the supplied cipherText bytes.
+            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(saltLength).Take(ivLength).ToArray();
             // Get the actual cipher text bytes by removing the first 64 bytes from the cipherText string.
-            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
+            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip(saltLength + ivLength).Take(cipherTextBytesWithSaltAndIv.Length - (saltLength + ivLength)).ToArray();
 
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = Aes.Create())
                 {
-                    symmetricKey.BlockSize = 256;
+                    symmetricKey.BlockSize = BlockSize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))

@@ -6,7 +6,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A collection of useful C# utilities, extensions, and data structures.</Description>
     <Authors>Chris Gonzales</Authors>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <PackageTags>Commons C# DataStructures Dictionary Extensions</PackageTags>
     <Copyright>Copyright 2021 Chris Gonzales</Copyright>
     <PackageIconUrl>https://chrisg32.github.io/assets/cg_logo.png</PackageIconUrl>
@@ -19,18 +19,18 @@
     <Product>CG Commons Library</Product>
     <RepositoryType>Git</RepositoryType>
     <RepositoryUrl>https://github.com/chrisg32/Commons</RepositoryUrl>
-    <PackageReleaseNotes>Fix for string Cypher AES bit length.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix for string Cypher AES broken decryption. WARNING! make break the ability to decrypt strings encrypted with 1.0.7 and below.</PackageReleaseNotes>
     <AssemblyName>CG.Commons</AssemblyName>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageVersion>1.0.8</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <Title>Commons</Title>
     <LangVersion>9</LangVersion>
-    <AssemblyVersion>1.0.8</AssemblyVersion>
-    <FileVersion>1.0.8</FileVersion>
+    <AssemblyVersion>1.0.9</AssemblyVersion>
+    <FileVersion>1.0.9</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="logo.png" Pack="true" PackagePath=""/>
+    <None Include="logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
