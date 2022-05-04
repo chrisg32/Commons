@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>CG.Commons</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A collection of useful C# utilities, extensions, and data structures.</Description>
     <Authors>Chris Gonzales</Authors>
     <Version>1.0.9</Version>
     <PackageTags>Commons C# DataStructures Dictionary Extensions</PackageTags>
-    <Copyright>Copyright 2021 Chris Gonzales</Copyright>
+    <Copyright>Copyright 2022 Chris Gonzales</Copyright>
     <PackageIconUrl>https://chrisg32.github.io/assets/cg_logo.png</PackageIconUrl>
     <PackageIcon>logo.png</PackageIcon>
     <PackageProjectUrl>https://github.com/chrisg32/Commons</PackageProjectUrl>
@@ -19,12 +19,12 @@
     <Product>CG Commons Library</Product>
     <RepositoryType>Git</RepositoryType>
     <RepositoryUrl>https://github.com/chrisg32/Commons</RepositoryUrl>
-    <PackageReleaseNotes>Fix for string Cypher AES broken decryption. WARNING! make break the ability to decrypt strings encrypted with 1.0.7 and below.</PackageReleaseNotes>
+    <PackageReleaseNotes>Performance improvements for NaturalComparer.</PackageReleaseNotes>
     <AssemblyName>CG.Commons</AssemblyName>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageVersion>1.0.9</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Title>Commons</Title>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <AssemblyVersion>1.0.9</AssemblyVersion>
     <FileVersion>1.0.9</FileVersion>
   </PropertyGroup>

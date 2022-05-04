@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CG.Commons.Util;
 using Xunit;
 
@@ -80,28 +81,32 @@ namespace CG.Commons.Test.Util
         [InlineData("aa", " a\ta", ComparerEquality.Equal, NaturalComparerOptions.IgnoreWhiteSpace)]
         //capitalization order
         [InlineData("added4", "Added11", ComparerEquality.LessThan)]
+        [InlineData("added4", "Added11", ComparerEquality.GreaterThan, NaturalComparerOptions.LowercaseFirst)]
         //double decimals
         [InlineData("12.4.1", "12.4.1", ComparerEquality.Equal)]
         [InlineData("12.41", "12.4.1", ComparerEquality.GreaterThan)]
         public void TestCompare(string left, string right, ComparerEquality expectedResult, NaturalComparerOptions options = NaturalComparerOptions.None)
         {
+            var comparerOld = new NaturalComparerObsolete(options);
+            DoTest(left, right, expectedResult, comparerOld, nameof(NaturalComparerObsolete));
+            
             var comparer = new NaturalComparer(options);
-            DoTest(left, right, expectedResult, comparer);
+            DoTest(left, right, expectedResult, comparer, nameof(NaturalComparer));
         }
 
-        private static void DoTest(string left, string right, ComparerEquality expectedResult, NaturalComparer comparer)
+        private static void DoTest(string left, string right, ComparerEquality expectedResult, IComparer<string> comparer, string note)
         {
             var result = comparer.Compare(left, right);
             switch (expectedResult)
             {
                 case ComparerEquality.LessThan:
-                    Assert.True(result <= (int)expectedResult, $"Result: {result} Expected Result: {expectedResult}({(int)expectedResult})");
+                    Assert.True(result <= (int)expectedResult, $"Result: {result} Expected: {expectedResult}({(int)expectedResult}) - {note}");
                     break;
                 case ComparerEquality.Equal:
-                    Assert.True(result == (int)expectedResult, $"Result: {result} Expected Result: {expectedResult}({(int)expectedResult})");
+                    Assert.True(result == (int)expectedResult, $"Result: {result} Expected: {expectedResult}({(int)expectedResult}) - {note}");
                     break;
                 case ComparerEquality.GreaterThan:
-                    Assert.True(result >= (int)expectedResult, $"Result: {result} Expected Result: {expectedResult}({(int)expectedResult})");
+                    Assert.True(result >= (int)expectedResult, $"Result: {result} Expected: {expectedResult}({(int)expectedResult}) - {note}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);

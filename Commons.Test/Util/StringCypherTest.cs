@@ -20,7 +20,7 @@ namespace CG.Commons.Test.Util
 
             //assert
             encrypted.Should().NotBeNullOrEmpty();
-            decrypted.Should().NotBeNullOrEmpty().And.Should().BeEquivalentTo(testString);
+            decrypted.Should().NotBeNullOrEmpty().And.BeEquivalentTo(testString);
         }
     }
 }
