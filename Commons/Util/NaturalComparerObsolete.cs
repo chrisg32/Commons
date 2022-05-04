@@ -1,32 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CG.Commons.Util
 {
-    public class NaturalComparerSpan : IComparer<string>, IComparer
+    [Obsolete]
+    public class NaturalComparerObsolete : IComparer<string>, IComparer
     {
         private readonly bool _ignoreCase;
         private readonly bool _ignoreWhitespace;
         private readonly bool _checkTrailingDecimalLength;
-        // private readonly bool _lowercaseFirst;
+        private readonly bool _lowercaseFirst;
         private readonly bool _decimalPrecision;
-        private readonly Func<char, char, int> _singleCharComparer;
 
-        public NaturalComparerSpan(NaturalComparerOptions options = NaturalComparerOptions.None)
+        public NaturalComparerObsolete(NaturalComparerOptions options = NaturalComparerOptions.None)
         {
             _ignoreCase = options.HasFlag(NaturalComparerOptions.IgnoreCase);
             _ignoreWhitespace = options.HasFlag(NaturalComparerOptions.IgnoreWhiteSpace);
             _checkTrailingDecimalLength = options.HasFlag(NaturalComparerOptions.CheckTrailingDecimalLength);
-            // _lowercaseFirst = options.HasFlag(NaturalComparerOptions.LowercaseFirst);
+            _lowercaseFirst = options.HasFlag(NaturalComparerOptions.LowercaseFirst);
             _decimalPrecision = options.HasFlag(NaturalComparerOptions.DecimalPrecision);
-
-            _singleCharComparer = options.HasFlag(NaturalComparerOptions.LowercaseFirst)
-                ? LowercaseFirstComparison
-                : NormalComparison;
         }
-
-        public int Compare(string left, string right) => CompareSpan(left ?? ReadOnlySpan<char>.Empty, right?? ReadOnlySpan<char>.Empty);
 
         //less than zero = x is less than y
         //zero = x equals y
@@ -40,12 +36,28 @@ namespace CG.Commons.Util
         /// <returns>If the left string is less than the right the return value will be less than zero.
         ///  If the left string is greater than the right than a value greater than zero is returned.
         ///  If the left string is equal to the right string zero is returned.</returns>
-        public int CompareSpan(ReadOnlySpan<char> left, ReadOnlySpan<char> right)
+        public int Compare(string left, string right)
         {
-            var xarray = left.Trim();
-            var yarray = right.Trim();
-            
+            //treat null and empty strings the same, also ignore leading and trailing whitespace
+            var x = left?.Trim() ?? string.Empty;
+            var y = right?.Trim() ?? string.Empty;
+
+            if (_ignoreCase)
+            {
+                x = x.ToLower();
+                y = y.ToLower();
+            }
+
+            if (_ignoreWhitespace)
+            {
+                var regex = new Regex(@"\s");
+                x = regex.Replace(x, string.Empty);
+                y = regex.Replace(y, string.Empty);
+            }
+
             //we can't use iterator since we need to see the next value
+            var xarray = x.ToCharArray();
+            var yarray = y.ToCharArray();
             int xindex = -1, yindex = -1;
             while (true)
             {
@@ -89,13 +101,13 @@ namespace CG.Commons.Util
                 if (yIsNum) return 1;
 
                 //both characters are not numeric so we simply compare
-                var cresult = _singleCharComparer(xchar, ychar);
+                var cresult = CapitalOrderComparison(xchar, ychar);
                 if (cresult != 0) return cresult;
             }
 
         }
-        
-        private static int LowercaseFirstComparison(char x, char y)
+
+        private int CapitalOrderComparison(char x, char y)
         {
             var result = x.CompareTo(y);
             if (result == 0) return result;
@@ -103,39 +115,37 @@ namespace CG.Commons.Util
             {
                 result = char.ToLowerInvariant(x).CompareTo(char.ToLowerInvariant(y));
                 if (result != 0) return result;
-                if (!char.IsLower(x) && char.IsLower(y)) return -1;
-                if (char.IsLower(x) && !char.IsLower(y)) return 1;
-            }
-            return result;
-        }
-        
-        private static int NormalComparison(char x, char y)
-        {
-            var result = x.CompareTo(y);
-            if (result == 0) return result;
-            if (char.IsLetter(x) && char.IsLetter(y))
-            {
-                result = char.ToLowerInvariant(x).CompareTo(char.ToLowerInvariant(y));
-                if (result != 0) return result;
-                if (!char.IsLower(x) && char.IsLower(y)) return 1;
-                if (char.IsLower(x) && !char.IsLower(y)) return -1;
+                if (_lowercaseFirst)
+                {
+                    if (!char.IsLower(x) && char.IsLower(y)) return -1;
+                    if (char.IsLower(x) && !char.IsLower(y)) return 1;
+                }
+                else
+                {
+                    if (!char.IsLower(x) && char.IsLower(y)) return 1;
+                    if (char.IsLower(x) && !char.IsLower(y)) return -1;
+                }
             }
             return result;
         }
 
-        private static ReadOnlySpan<char> GetNumericString(ReadOnlySpan<char> source, ref int index, bool decimalPrecision)
+        private static string GetNumericString(IReadOnlyList<char> source, ref int index, bool decimalPrecision)
         {
+            var sb = new StringBuilder();
             var point = true;
-            var start = index;
-            while (index < source.Length && (char.IsDigit(source[index]) || decimalPrecision && point && source[index] == '.'))
+            while (index < source.Count && (char.IsDigit(source[index]) || decimalPrecision && point && source[index] == '.'))
             {
                 if (source[index] == '.') point = false;
+                sb.Append(source[index]);
                 index++;
             }
             index--;
-            return source.Slice(start, index - start + 1);
+            return sb.ToString();
         }
 
-        public int Compare(object x, object y) => Compare(x?.ToString(), y?.ToString());
+        public int Compare(object x, object y)
+        {
+            return Compare(x?.ToString(), y?.ToString());
+        }
     }
 }

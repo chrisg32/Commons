@@ -5,7 +5,7 @@ using CG.Commons.Util;
 namespace Commons.Benchmark.Util;
 
 [MemoryDiagnoser(false)]
-public class NaturalComparerBenchmarks
+public class NaturalComparerLargeSimilarStringBenchmarks
 {
     private NaturalComparerObsolete _comparerObsolete = null!;
     private NaturalComparerObsolete _comparerObsoleteIgnoreCase = null!;
@@ -15,6 +15,9 @@ public class NaturalComparerBenchmarks
     private NaturalComparer _comparerIgnoreCase = null!;
     private NaturalComparer _comparerIgnoreWhitespace = null!;
     private NaturalComparer _comparerIgnoreCaseWhitespace = null!;
+
+    private string _left = null!;
+    private string _right = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -28,34 +31,57 @@ public class NaturalComparerBenchmarks
         _comparerIgnoreCase = new NaturalComparer(NaturalComparerOptions.IgnoreCase);
         _comparerIgnoreWhitespace = new NaturalComparer(NaturalComparerOptions.IgnoreWhiteSpace);
         _comparerIgnoreCaseWhitespace = new NaturalComparer(NaturalComparerOptions.IgnoreCase | NaturalComparerOptions.IgnoreWhiteSpace);
+
+        _left = GenerateString(20, "abcdefg01.01");
+        _right = GenerateString(20, "abcdefg01.02");
     }
 
-    private const string Left = "  ThisIsA StringWithANumber00201.3   ";
-    private const string Right = " ThisIsA  StringWithANumber00100.6     ";
+    public static string GenerateString(int times, string seed)
+    {
+        var decimals = seed.Count(c => c == '.');
+        var array = new char[times * (seed.Length - decimals) + decimals];
+        var i = 0;
+        foreach (var c in seed)
+        {
+            if (c == '.')
+            {
+                array[i++] = c;
+            }
+            else
+            {
+                for (var j = 0; j < times; j++, i++)
+                {
+                    array[i] = c;
+                }
+            }
+        }
+        return new string(array);
+    }
+    
     
     [Benchmark]
-    public void Compare() => _ = _comparerObsolete.Compare(Left , Right);
+    public void Compare() => _ = _comparerObsolete.Compare(_left , _right);
 
     [Benchmark]
-    public void CompareIgnoreCase() => _ = _comparerObsoleteIgnoreCase.Compare(Left, Right);
+    public void CompareIgnoreCase() => _ = _comparerObsoleteIgnoreCase.Compare(_left, _right);
 
     [Benchmark]
-    public void CompareIgnoreWhiteSpace() => _ = _comparerObsoleteIgnoreWhitespace.Compare(Left, Right);
+    public void CompareIgnoreWhiteSpace() => _ = _comparerObsoleteIgnoreWhitespace.Compare(_left, _right);
 
     [Benchmark]
-    public void CompareIgnoreCaseWhiteSpace() => _ = _comparerObsoleteIgnoreCaseWhitespace.Compare(Left, Right);
+    public void CompareIgnoreCaseWhiteSpace() => _ = _comparerObsoleteIgnoreCaseWhitespace.Compare(_left, _right);
     
     
     
     [Benchmark]
-    public void Compare_Span() => _ = _comparer.Compare(Left , Right);
+    public void Compare_Span() => _ = _comparer.Compare(_left , _right);
 
     [Benchmark]
-    public void CompareIgnoreCase_Span() => _ = _comparerIgnoreCase.Compare(Left, Right);
+    public void CompareIgnoreCase_Span() => _ = _comparerIgnoreCase.Compare(_left, _right);
 
     [Benchmark]
-    public void CompareIgnoreWhiteSpace_Span() => _ = _comparerIgnoreWhitespace.Compare(Left, Right);
+    public void CompareIgnoreWhiteSpace_Span() => _ = _comparerIgnoreWhitespace.Compare(_left, _right);
 
     [Benchmark]
-    public void CompareIgnoreCaseWhiteSpace_Span() => _ = _comparerIgnoreCaseWhitespace.Compare(Left, Right);
+    public void CompareIgnoreCaseWhiteSpace_Span() => _ = _comparerIgnoreCaseWhitespace.Compare(_left, _right);
 }

@@ -87,11 +87,11 @@ namespace CG.Commons.Test.Util
         [InlineData("12.41", "12.4.1", ComparerEquality.GreaterThan)]
         public void TestCompare(string left, string right, ComparerEquality expectedResult, NaturalComparerOptions options = NaturalComparerOptions.None)
         {
+            var comparerOld = new NaturalComparerObsolete(options);
+            DoTest(left, right, expectedResult, comparerOld, nameof(NaturalComparerObsolete));
+            
             var comparer = new NaturalComparer(options);
             DoTest(left, right, expectedResult, comparer, nameof(NaturalComparer));
-            
-            var oldComparer = new NaturalComparerSpan(options);
-            DoTest(left, right, expectedResult, oldComparer, nameof(NaturalComparerSpan));
         }
 
         private static void DoTest(string left, string right, ComparerEquality expectedResult, IComparer<string> comparer, string note)
